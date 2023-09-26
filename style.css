@@ -1,0 +1,146 @@
+@import url(https://fonts.googleapis.com/css?family=Oswald:300,400);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+@import url(https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css);
+body {background-color: #212121;}
+*{margin:0; padding:0; box-sizing:border-box;}
+.product {
+  float:left;
+  display:inline;
+  font-family: 'Oswald', Arial, sans-serif;
+  position: relative;
+  float: left;
+  max-width:30%;
+  min-width: 280px;
+  width: 100%;
+  background: #ffffff;
+  text-align: center;
+  color: #000000;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+  font-size: 16px;
+  padding: 15px;
+  margin:20px;
+  margin-bottom:70px;
+}
+.product img {
+  max-width: 100%;
+  vertical-align: top;
+  position: relative;
+}
+.product figcaption {
+  padding: 20px 15px;
+}
+.product h3,
+.product p {
+  margin: 0;
+}
+.product h3 {
+  font-size: 1.3em;
+  font-weight: 400;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+.product p {
+  font-size: 0.9em;
+  letter-spacing: 1px;
+  font-weight: 300;
+}
+.product .price {
+  font-weight: 500;
+  font-size: 1.5em;
+  line-height: 70px;
+  letter-spacing: 1px;
+}
+.product .price #old {
+  margin-right: 5px;
+  opacity: 0.5;
+  font-size: 0.85em;
+ display:inline-block;
+  text-decoration:line-through;
+}
+.product .price #new {display:inline-block;}
+.product #clac{
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  -webkit-transform: translate(-50%, 55%);
+  transform: translate(-50%, 55%);
+  width:100px;
+  padding:15px;
+  text-align: center;
+  border-radius: 50%;
+  background-color: #ff3349;
+  color: #ffffff;
+  font-size: 1.6em;
+  border: 4px solid #ffffff;
+}
+.form {
+  float:left;
+  dispaly:inline;
+  width: 320px;
+  margin: 16px;
+  font-size: 16px;
+  font-family: 'Open Sans', sans-serif;
+  margin-bottom:0;
+}
+.discount,
+.form p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.discount {
+  background: #ff5050;
+  padding: 20px;
+  font-size: 1.4em;
+  font-weight: normal;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+  display:inline-block;
+  width:100%;
+}
+.proce {
+    background: none;
+    padding: 10px;
+    font-size: 1.4em;
+    font-weight: normal;
+    text-align: center;
+    text-transform: uppercase;
+    color: black;
+    display:inline-block;
+    width:100%;
+  }
+.container {
+  background: #ebebeb;
+  padding: 12px;
+}
+.form p {
+  padding: 12px;
+}
+.form input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  padding: 16px;
+  outline: 0;
+  font-family: inherit;
+  font-size: 0.95em;
+}
+.form input[type="text"]{
+  background: #fff;
+  border-color: #bbb;
+  color: #555;
+}
+.form input[type="button"] {
+  background: #ff5050;
+  border-color: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.form input[type="button"]:hover {
+  background: #ff6666;
+}
+.ingresar{
+  text-align=center;
+}
