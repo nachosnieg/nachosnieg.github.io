@@ -12,4 +12,4 @@ function getQueryStringParam(param) {
 }
 let qParam = getQueryStringParam('q').split('+').join(' ');
 const div = document.getElementById('uText');
-div.innerHTML = qParam;
+div.innerHTML = '<div id="uText"><h1 class="orange">' + qParam + '</h1></div>';
