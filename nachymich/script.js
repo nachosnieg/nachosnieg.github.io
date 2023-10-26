@@ -1,77 +1,134 @@
- var prev=0;
+	$(document).ready(function(){
+		var quoteSource=[
+		{
+			quote: "Start by doing what's necessary; then do what's possible; and suddenly you are doing the impossible.",
+			name:"Francis of Assisi"
+	    },
+	    {
+	    	quote:"Believe you can and you're halfway there.",
+	    	name:"Theodore Roosevelt"
+	    },
+	    {
+	    	quote:"It does not matter how slowly you go as long as you do not stop.",
+	    	name:"Confucius"
+	    },
+	    {
+	    	quote:"Our greatest weakness lies in giving up. The most certain way to succeed is always to try just one more time.",
+	    	name:"Thomas A. Edison"
+	    },
+	    {
+	    	quote:"The will to win, the desire to succeed, the urge to reach your full potential... these are the keys that will unlock the door to personal excellence.",
+	    	name:"Confucius"
+	    },
+	    {
+	    	quote:"Don't watch the clock; do what it does. Keep going.",
+	    	name:"Sam Levenson"
+	    },
+	    {
+	    	quote:"A creative man is motivated by the desire to achieve, not by the desire to beat others.",
+	    	name:"Ayn Rand"
+	    },
+	    {
+	    	quote:"A creative man is motivated by the desire to achieve, not by the desire to beat others.",
+	    	name:"Ayn Rand"
+	    },
+	    {
+	    	quote:"Expect problems and eat them for breakfast.",
+	    	name:"Alfred A. Montapert"
+	    },
+	    {
+	    	quote:"Start where you are. Use what you have. Do what you can.",
+	    	name:"Arthur Ashe"
+	    },
+	    {
+	    	quote:"Ever tried. Ever failed. No matter. Try Again. Fail again. Fail better.",
+	    	name:"Samuel Beckett"
+	    },
+	    {
+	    	quote:"Be yourself; everyone else is already taken.",
+	    	name:"Oscar Wilde"
+	    },
+	    {
+	    	quote:"Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.",
+	    	name:"Albert Einstein"
+	    },
+	    {
+	    	quote:"Always remember that you are absolutely unique. Just like everyone else.",
+	    	name:"Margaret Mead"
+	    },
+	    {
+	    	quote:"Do not take life too seriously. You will never get out of it alive.",
+	    	name:"Elbert Hubbard"
+	    },
+	    {
+	    	quote:"People who think they know everything are a great annoyance to those of us who do.",
+	    	name:"Isaac Asimov"
+	    },
+	    {
+	    	quote:"Procrastination is the art of keeping up with yesterday.",
+	    	name:"Don Marquis"
+	    },
+	    {
+	    	quote:"Get your facts first, then you can distort them as you please.",
+	    	name:"Mark Twain"
+	    },
+	    {
+	    	quote:"A day without sunshine is like, you know, night.",
+	    	name:"Steve Martin"
+	    },
+	    {
+	    	quote:"My grandmother started walking five miles a day when she was sixty. She's ninety-seven now, and we don't know where the hell she is.",
+	    	name:"Ellen DeGeneres"
+	    },
+	    {
+	    	quote:"Don't sweat the petty things and don't pet the sweaty things.",
+	    	name:"George Carlin"
+	    },
+	    {
+	    	quote:"Always do whatever's next.",
+	    	name:"George Carlin"
+	    },
+	    {
+	    	quote:"Atheism is a non-prophet organization.",
+	    	name:"George Carlin"
+	    },
+	    {
+	    	quote:"Hapiness is not something ready made. It comes from your own actions.",
+	    	name:"Dalai Lama"
+	    }
 
+	];
+		
 
-$("#quotebutton").on("click", update);
-  $("dl").css("fontSize", "16px");
- $("dt").css("fontSize", "19px");
+		$('#quoteButton').click(function(evt){
+			//define the containers of the info we target
+			var quote = $('#quoteContainer p').text();
+			var quoteGenius = $('#quoteGenius').text();
+			//prevent browser's default action
+			evt.preventDefault();
+			//getting a new random number to attach to a quote and setting a limit
+			var sourceLength = quoteSource.length;
+			var randomNumber= Math.floor(Math.random()*sourceLength);
+			//set a new quote
+			for(i=0;i<=sourceLength;i+=1){
+			var newQuoteText = quoteSource[randomNumber].quote;
+			var newQuoteGenius = quoteSource[randomNumber].name;
+			//console.log(newQuoteText,newQuoteGenius);
+      var timeAnimation = 500;
+      var quoteContainer = $('#quoteContainer');
+      //fade out animation with callback
+      quoteContainer.fadeOut(timeAnimation, function(){
+        quoteContainer.html('');
+				quoteContainer.append('<p>'+newQuoteText+'</p>'+'<p id="quoteGenius">'+'-								'+newQuoteGenius+'</p>');
+        //fadein animation.
+        quoteContainer.fadeIn(timeAnimation);
+      });  
+			
+			break;
+		};//end for loop
+	
+	});//end quoteButton function
+		
+		
+});//end document ready
 
-function update(){
-  change();
- createButton(); 
-}
-function createButton() {
-
-  // Remove Whatever is in the tweeetbox div if theres somethign 
-  //there to avoid adding multiple tweetbuttons
- $("#twtbox").empty();
- 
-  // Create a New Tweet Element
-
-  var link = document.createElement('a');
-  link.setAttribute('href', 'https://twitter.com/share');
-  link.setAttribute('class', 'twitter-share-button');
-  link.setAttribute('style', 'margin-top:5px;');
-  link.setAttribute('id', 'twitterbutton');
-  link.setAttribute("data-text", tweettext);
-  link.setAttribute("data-size", "large");
-
-  // Put it inside the twtbox div
-  tweetdiv = document.getElementById('twtbox');
-  tweetdiv.appendChild(link);
-
-  twttr.widgets.load(); //very important
-}
-
-
-
-function change() {
-  var quotes = ["Don't cry because it's over, smile because it happened@Dr. Seuss", "In the end, it's not the years in your life that count. It's the life in your years.@Abraham Lincoln", "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.@Albert Einstein", "Be who you are and say what you feel, because those who mind don't matter, and those who matter don't mind.@Bernard M. Baruch", "A room without books is like a body without a soul.@Marcus Tullius Cicero", "So many books, so little time.” @Frank Zappa", "Be the change that you wish to see in the world.@Mahatma Gandhi", "If you tell the truth, you don't have to remember anything.@Mark Twain"];
-var num=Math.floor(Math.random() * quotes.length);
-  while(num==prev){
-    num=Math.floor(Math.random() * quotes.length);
-  }
-  prev=num;
-  var quotedisplay = quotes[num].split("@");
-  //console.log(quotedisplay[0]);
-  //console.log(quotedisplay[1]);
-
-  tweettext = quotedisplay[0] + " --"+ quotedisplay[1] ;
-  document.getElementById('quote').innerHTML =quotedisplay[0];
-  document.getElementById('author').innerHTML = "--" + quotedisplay[1];
-
-}
-
-$(document).ready(function() {
-
-  var tweettext = "";
-
-  change();
-  createButton();
-
-  $("dt").css("fontSize", "19px");
-  $("dl").css("fontSize", "16px");
-
-  /**Be who you are and say what you feel, because those who mind don't matter, and those who matter don't mind.@Bernard M. Baruch
-  A room without books is like a body without a soul.@Marcus Tullius Cicero
-  So many books, so little time.” @Frank Zappa
-  Be the change that you wish to see in the world.@Mahatma Gandhi
-  If you tell the truth, you don't have to remember anything.@Mark Twain
-  Always forgive your enemies; nothing annoys them so much. @Oscar Wilde
-  Live as if you were to die tomorrow. Learn as if you were to live forever.@Mahatma Gandhi
-  Don't think or judge, just listen.@Sarah Dessen
-  One day, in retrospect, the years of struggle will strike you as the most beautiful.@Sigmund Freud
-  Don't be afraid of your fears. They're not there to scare you. They're there to let you know that something is worth it.@C JoyBell C
-  For great men, religion is a way of making friends; small people make religion a fighting tool.@A.P.J. Abdul Kalam
-  Dreams are not those which comes while we are sleeping, but dreams are those when u don't sleep before fulfilling them.@A.P.J. Abdul Kalam
-  **/
-});
