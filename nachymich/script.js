@@ -17,18 +17,19 @@
 	    },
 		
 	    {
-	    	quote:"¿Cuándo fue la última vez que dieron un paseo sin rumbo fijo? Caminar juntos puede dar lugar a conversaciones significativas y descubrir nuevas perspectivas. La actividad de esta semana es dar un paseo juntos a donde sea",
+	    	quote:"(si viste la anterior fingí demencia porque no se había actualizado bien xd) Sabemos que yo soy el chill y vos la butaquera (aunque yo soy mas butaquero pero en la práctica no espiritualmente) y tenemos gustos de música diferente... pero podriamos hacer una lista de reproducción de canciones que nos recuerden momentos especiales y escucharla juntos. Lo bueno de esta actividad es que puede extenderse al infinito, e ir agregando cada vez mas canciones como para hacer un album de fotos pero de canciones (?",
 	    	
 	    },
 		
 		{
-	    	quote:"Believe you can and you're halfway there.",
+	    	quote:"Esta te va a gustar: Invitar a amigos para compartir una noche de juegos. Es algo que te encanta y a mi tambien y no hemos tenido muchas oportunidades de hacerlo. Eso no solo nos va a dar diversión y algo para compartir con amigos si no también nos va a poner en un lugar de sociabilidad como pareja, y ya somos una parejita asi que puede ser lindo. Puede ir nacho, joha, shir, fer, cualquiera... incluso tus compañeros de trabajo (?",
+		
 	    	
 	    },
 		
 		{
-	    	quote:"Believe you can and you're halfway there.",
-	    	
+		quote:"Esta es mas cursi. Y mas comoda para mi pero bueno que viva la ñoñez: Hagamos una lista de cosas que apreciamos el uno del otro, y luego las compartimos. Tenemos una semana hasta que nos veamos, no podemos decirnos nada al respecto. Luego nos juntamos y nos leemos lo que pensamos el uno del otro y hablamos de cositas lindas desde el amor ♥",
+	    		    	
 	    },
 		
 		
