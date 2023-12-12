@@ -36,22 +36,22 @@
 	    {
 	    	quote:"Hapiness is not something ready made. It comes from your own actions.",
 	    	
-	    }
+	    },
 		
 		{
 	    	quote:"Esta es una idea que te robe jaja. Hagamos un reel juntos! Ya sea de nuestro viaje a cordoba, o alguno que podamos guardar y hacer juntitos. Divertido, para hacer dentro de una casa, afuera, bien vestidos o crotitos. Algo que sea lindo para hacer en pareja que te parece? ♥",
 		
 	    	
-	    }
+	    },
 		
 		{
 			quote:"Hagamos un picnic!. Podemos hacerlo en el parque o en un lugar al aire libre cercano, llevar algo de comer y pasar un rato agradable juntos. No hay necesidad de planificar demasiado, solo disfrutar el momento. Puedo llevar la guitarra (ahre) o llevamos para terminar una de las pelis que elegimos ver y nunca terminamos, o podemos llevar el parlantecito y escuchar musica o un podcast. Algo asi biem chill, que opinas?"
-		}
+		},
 		
 		{
 	    	quote:"Hapiness is not something ready made. It comes from your own actions.",
 	    	
-	    }
+	    },
 
 	];
 		
