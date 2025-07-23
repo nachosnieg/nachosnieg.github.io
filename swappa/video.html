@@ -6,35 +6,79 @@
   <style>
     body {
       font-family: sans-serif;
-      margin: 10px;
-      background: #f9f9f9;
+      margin: 20px;
+      background: #f4f4f9;
+      color: #333;
     }
-    #player { margin-bottom: 10px; }
+    #main-container, #id-input-container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    #id-input-container { text-align: center; }
+    #player { margin-bottom: 15px; }
     #moments { list-style: none; padding: 0; }
     .moment {
-      background: #ffeeba;
-      padding: 5px;
-      margin-bottom: 4px;
+      background: #fffbeA;
+      padding: 8px 12px;
+      margin-bottom: 6px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border: 1px solid #f0ad4e;
+      border-radius: 4px;
       cursor: pointer;
+      transition: background-color 0.2s;
     }
+    .moment:hover { background-color: #fdf5d3; }
     .moment span.time {
       font-weight: bold;
-      margin-right: 10px;
+      margin-right: 15px;
+      color: #c0392b;
     }
-    button {
+    button, #youtube-url-submit {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #e9e9e9;
+      cursor: pointer;
       margin-right: 5px;
+      transition: background-color 0.2s;
     }
+    button:hover, #youtube-url-submit:hover { background-color: #dcdcdc; }
+    #youtube-url-input {
+      padding: 8px;
+      width: 70%;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .controls { margin-top: 15px; }
+    #csv-file-input { display: none; }
   </style>
 </head>
 <body>
-  <div id="player"></div>
-  <ul id="moments"></ul>
-  <button onclick="copyMoments()">Copiar destacados</button>
-  <button onclick="clearMoments()">Borrar todo</button>
+
+  <div id="id-input-container" style="display: none;">
+    <h3>Ingresá la URL del video de YouTube</h3>
+    <input type="text" id="youtube-url-input" placeholder="https://www.youtube.com/watch?v=...">
+    <button id="youtube-url-submit">Cargar Video</button>
+  </div>
+
+  <div id="main-container" style="display: none;">
+    <div id="player"></div>
+    <ul id="moments"></ul>
+    <div class="controls">
+      <button onclick="copyMoments()">Copiar destacados</button>
+      <button onclick="exportCSV()">Exportar a CSV</button>
+      <button id="import-btn">Importar desde CSV</button>
+      <input type="file" id="csv-file-input" accept=".csv" />
+      <button onclick="clearMoments()">Borrar todo</button>
+    </div>
+  </div>
 
   <script>
     let tag = document.createElement("script");
@@ -46,9 +90,30 @@
     let videoId = null;
     let moments = [];
 
-    function getVideoId() {
+    // Contenedores de la UI
+    const mainContainer = document.getElementById('main-container');
+    const idInputContainer = document.getElementById('id-input-container');
+
+    function getVideoIdFromUrl() {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get("id");
+    }
+
+    function extractVideoId(url) {
+        // Expresión regular para extraer el ID de varias URLs de YouTube
+        const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+        const match = url.match(regex);
+        return match ? match[1] : null;
+    }
+
+    function handleUrlSubmit() {
+        const urlInput = document.getElementById('youtube-url-input');
+        const extractedId = extractVideoId(urlInput.value);
+        if (extractedId) {
+            window.location.search = `?id=${extractedId}`;
+        } else {
+            alert("URL de YouTube no válida. Por favor, intentá de nuevo.");
+        }
     }
 
     function saveToStorage() {
@@ -68,28 +133,44 @@
     }
 
     function onYouTubeIframeAPIReady() {
-      videoId = getVideoId();
+      videoId = getVideoIdFromUrl();
       if (!videoId) {
-        alert("Falta el parámetro ?id");
+        // Muestra el input para la URL si no hay ID
+        idInputContainer.style.display = 'block';
+        document.getElementById('youtube-url-submit').onclick = handleUrlSubmit;
+        document.getElementById('youtube-url-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleUrlSubmit();
+            }
+        });
         return;
       }
 
+      // Muestra el reproductor si hay ID
+      mainContainer.style.display = 'block';
+
       player = new YT.Player("player", {
-        height: "200",
+        height: "360",
         width: "100%",
         videoId: videoId,
         events: {
+          onReady: onPlayerReady,
           onStateChange: onPlayerStateChange,
         },
         playerVars: {
           modestbranding: 1,
           controls: 1,
           rel: 0,
-          fs: 0,
+          fs: 1,
         },
       });
-
-      loadFromStorage();
+    }
+    
+    function onPlayerReady(event) {
+        loadFromStorage();
+        // Setup botones de importación/exportación
+        document.getElementById('import-btn').onclick = () => document.getElementById('csv-file-input').click();
+        document.getElementById('csv-file-input').addEventListener('change', importCSV);
     }
 
     function formatTime(seconds) {
@@ -111,6 +192,7 @@
       const label = `Momento destacado (${clockTime})`;
       const moment = { time: timestamp, label };
       moments.push(moment);
+      moments.sort((a, b) => a.time - b.time); // Ordenar por tiempo
       saveToStorage();
       renderMoments();
     }
@@ -128,7 +210,13 @@
         span.textContent = formatTime(m.time);
 
         const label = document.createElement("span");
+        // Permitir edición del label
         label.textContent = m.label;
+        label.contentEditable = true;
+        label.onblur = (e) => {
+            moments[index].label = e.target.innerText;
+            saveToStorage();
+        };
 
         const del = document.createElement("button");
         del.textContent = "🗑️";
@@ -147,12 +235,16 @@
     }
 
     function copyMoments() {
-      const text = moments.map(m => `${formatTime(m.time)} - ${m.label}`).join("\n");
-      navigator.clipboard.writeText(text).then(() => alert("Copiado"));
+        if (moments.length === 0) {
+            alert("No hay momentos para copiar.");
+            return;
+        }
+      const text = moments.map(m => `${formatTime(m.time)} ${m.label}`).join("\n");
+      navigator.clipboard.writeText(text).then(() => alert("Momentos copiados al portapapeles."));
     }
 
     function clearMoments() {
-      if (confirm("¿Seguro que querés borrar todos los momentos destacados?")) {
+      if (confirm("¿Seguro que querés borrar todos los momentos destacados para este video?")) {
         moments = [];
         saveToStorage();
         renderMoments();
@@ -160,6 +252,7 @@
     }
 
     function onPlayerStateChange(event) {
+      if (typeof player.getCurrentTime !== 'function') return;
       const currentTime = player.getCurrentTime();
 
       if (event.data === YT.PlayerState.PAUSED) {
@@ -178,6 +271,72 @@
         lastPauseTime = null;
       }
     }
+
+    function exportCSV() {
+        if (moments.length === 0) {
+            alert("No hay momentos para exportar.");
+            return;
+        }
+
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "time,label\n"; // Header
+
+        moments.forEach(m => {
+            const row = `${m.time},"${m.label.replace(/"/g, '""')}"`; // Escapar comillas en el label
+            csvContent += row + "\n";
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `momentos_${videoId}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    
+    function importCSV(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const text = e.target.result;
+            const importedMoments = [];
+            const rows = text.split('\n').slice(1); // Saltar el header
+
+            rows.forEach(row => {
+                if (row.trim() === '') return;
+                const columns = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g); // Manejar comas dentro de labels con comillas
+                if (columns && columns.length >= 2) {
+                    const time = parseFloat(columns[0]);
+                    let label = columns[1];
+                    // Limpiar comillas del label
+                    if (label.startsWith('"') && label.endsWith('"')) {
+                        label = label.slice(1, -1).replace(/""/g, '"');
+                    }
+                    if (!isNaN(time) && label) {
+                        importedMoments.push({ time, label });
+                    }
+                }
+            });
+
+            if (importedMoments.length > 0) {
+                if (confirm(`Encontrados ${importedMoments.length} momentos. ¿Querés reemplazar los momentos actuales de este video?`)) {
+                    moments = importedMoments;
+                    moments.sort((a, b) => a.time - b.time); // Ordenar por tiempo
+                    saveToStorage();
+                    renderMoments();
+                    alert("Momentos importados y guardados correctamente.");
+                }
+            } else {
+                alert("No se encontraron momentos válidos en el archivo o el formato es incorrecto.");
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = ''; // Resetear el input para poder cargar el mismo archivo de nuevo
+    }
+
   </script>
 </body>
 </html>
