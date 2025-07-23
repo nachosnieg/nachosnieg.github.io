@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Momentos Destacados</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 10px;
+      background: #f9f9f9;
+    }
+    #player { margin-bottom: 10px; }
+    #moments { list-style: none; padding: 0; }
+    .moment {
+      background: #ffeeba;
+      padding: 5px;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #f0ad4e;
+      cursor: pointer;
+    }
+    .moment span.time {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    button {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="player"></div>
+  <ul id="moments"></ul>
+  <button onclick="copyMoments()">Copiar destacados</button>
+  <button onclick="clearMoments()">Borrar todo</button>
+
+  <script>
+    let tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+
+    let player;
+    let lastPauseTime = null;
+    let videoId = null;
+    let moments = [];
+
+    function getVideoId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get("id");
+    }
+
+    function saveToStorage() {
+      if (videoId) {
+        localStorage.setItem("moments_" + videoId, JSON.stringify(moments));
+      }
+    }
+
+    function loadFromStorage() {
+      if (videoId) {
+        const saved = localStorage.getItem("moments_" + videoId);
+        if (saved) {
+          moments = JSON.parse(saved);
+          renderMoments();
+        }
+      }
+    }
+
+    function onYouTubeIframeAPIReady() {
+      videoId = getVideoId();
+      if (!videoId) {
+        alert("Falta el parámetro ?id");
+        return;
+      }
+
+      player = new YT.Player("player", {
+        height: "200",
+        width: "100%",
+        videoId: videoId,
+        events: {
+          onStateChange: onPlayerStateChange,
+        },
+        playerVars: {
+          modestbranding: 1,
+          controls: 1,
+          rel: 0,
+          fs: 0,
+        },
+      });
+
+      loadFromStorage();
+    }
+
+    function formatTime(seconds) {
+      const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+      const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+      const secs = String(Math.floor(seconds % 60)).padStart(2, '0');
+      return `${hrs}:${mins}:${secs}`;
+    }
+
+    function getClockTime() {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      return `${hh}:${mm}`;
+    }
+
+    function addMoment(timestamp) {
+      const clockTime = getClockTime();
+      const label = `Momento destacado (${clockTime})`;
+      const moment = { time: timestamp, label };
+      moments.push(moment);
+      saveToStorage();
+      renderMoments();
+    }
+
+    function renderMoments() {
+      const ul = document.getElementById("moments");
+      ul.innerHTML = "";
+      moments.forEach((m, index) => {
+        const li = document.createElement("li");
+        li.className = "moment";
+        li.onclick = () => player.seekTo(m.time, true);
+
+        const span = document.createElement("span");
+        span.className = "time";
+        span.textContent = formatTime(m.time);
+
+        const label = document.createElement("span");
+        label.textContent = m.label;
+
+        const del = document.createElement("button");
+        del.textContent = "🗑️";
+        del.onclick = (e) => {
+          e.stopPropagation();
+          moments.splice(index, 1);
+          saveToStorage();
+          renderMoments();
+        };
+
+        li.appendChild(span);
+        li.appendChild(label);
+        li.appendChild(del);
+        ul.appendChild(li);
+      });
+    }
+
+    function copyMoments() {
+      const text = moments.map(m => `${formatTime(m.time)} - ${m.label}`).join("\n");
+      navigator.clipboard.writeText(text).then(() => alert("Copiado"));
+    }
+
+    function clearMoments() {
+      if (confirm("¿Seguro que querés borrar todos los momentos destacados?")) {
+        moments = [];
+        saveToStorage();
+        renderMoments();
+      }
+    }
+
+    function onPlayerStateChange(event) {
+      const currentTime = player.getCurrentTime();
+
+      if (event.data === YT.PlayerState.PAUSED) {
+        lastPauseTime = {
+          time: currentTime,
+          date: new Date()
+        };
+      }
+
+      if (event.data === YT.PlayerState.PLAYING && lastPauseTime) {
+        const now = new Date();
+        const diff = (now - lastPauseTime.date) / 1000;
+        if (diff <= 2) {
+          addMoment(lastPauseTime.time);
+        }
+        lastPauseTime = null;
+      }
+    }
+  </script>
+</body>
+</html>
