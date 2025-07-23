@@ -45,10 +45,18 @@
       border-radius: 4px;
       background-color: #e9e9e9;
       cursor: pointer;
-      margin-right: 5px;
+      margin: 4px; /* Margen para espaciado */
       transition: background-color 0.2s;
     }
     button:hover, #youtube-url-submit:hover { background-color: #dcdcdc; }
+    #add-moment-btn {
+        background-color: #28a745;
+        color: white;
+        border-color: #28a745;
+    }
+    #add-moment-btn:hover {
+        background-color: #218838;
+    }
     #youtube-url-input {
       padding: 8px;
       width: 70%;
@@ -56,7 +64,11 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-    .controls { margin-top: 15px; }
+    .controls { 
+        margin-top: 15px;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+    }
     #csv-file-input { display: none; }
   </style>
 </head>
@@ -70,8 +82,11 @@
 
   <div id="main-container" style="display: none;">
     <div id="player"></div>
+	<button id="add-moment-btn">➕ Agregar momento destacado</button>
     <ul id="moments"></ul>
     <div class="controls">
+      
+      <hr style="border: none; border-top: 1px solid #eee; margin: 10px 0;">
       <button onclick="copyMoments()">Copiar destacados</button>
       <button onclick="exportCSV()">Exportar a CSV</button>
       <button id="import-btn">Importar desde CSV</button>
@@ -100,7 +115,6 @@
     }
 
     function extractVideoId(url) {
-        // Expresión regular para extraer el ID de varias URLs de YouTube
         const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
         const match = url.match(regex);
         return match ? match[1] : null;
@@ -135,7 +149,6 @@
     function onYouTubeIframeAPIReady() {
       videoId = getVideoIdFromUrl();
       if (!videoId) {
-        // Muestra el input para la URL si no hay ID
         idInputContainer.style.display = 'block';
         document.getElementById('youtube-url-submit').onclick = handleUrlSubmit;
         document.getElementById('youtube-url-input').addEventListener('keypress', function(e) {
@@ -146,7 +159,6 @@
         return;
       }
 
-      // Muestra el reproductor si hay ID
       mainContainer.style.display = 'block';
 
       player = new YT.Player("player", {
@@ -168,7 +180,8 @@
     
     function onPlayerReady(event) {
         loadFromStorage();
-        // Setup botones de importación/exportación
+        // Setup de botones de acción
+        document.getElementById('add-moment-btn').onclick = addManualMoment;
         document.getElementById('import-btn').onclick = () => document.getElementById('csv-file-input').click();
         document.getElementById('csv-file-input').addEventListener('change', importCSV);
     }
@@ -197,6 +210,16 @@
       renderMoments();
     }
 
+    // NUEVA FUNCIÓN para agregar momento con el botón
+    function addManualMoment() {
+        if (player && typeof player.getCurrentTime === 'function') {
+            const currentTime = player.getCurrentTime();
+            addMoment(currentTime);
+        } else {
+            alert("El reproductor de video no está listo todavía.");
+        }
+    }
+
     function renderMoments() {
       const ul = document.getElementById("moments");
       ul.innerHTML = "";
@@ -210,7 +233,6 @@
         span.textContent = formatTime(m.time);
 
         const label = document.createElement("span");
-        // Permitir edición del label
         label.textContent = m.label;
         label.contentEditable = true;
         label.onblur = (e) => {
@@ -279,10 +301,10 @@
         }
 
         let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += "time,label\n"; // Header
+        csvContent += "time,label\n";
 
         moments.forEach(m => {
-            const row = `${m.time},"${m.label.replace(/"/g, '""')}"`; // Escapar comillas en el label
+            const row = `${m.time},"${m.label.replace(/"/g, '""')}"`;
             csvContent += row + "\n";
         });
 
@@ -303,15 +325,14 @@
         reader.onload = function(e) {
             const text = e.target.result;
             const importedMoments = [];
-            const rows = text.split('\n').slice(1); // Saltar el header
+            const rows = text.split('\n').slice(1);
 
             rows.forEach(row => {
                 if (row.trim() === '') return;
-                const columns = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g); // Manejar comas dentro de labels con comillas
+                const columns = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
                 if (columns && columns.length >= 2) {
                     const time = parseFloat(columns[0]);
                     let label = columns[1];
-                    // Limpiar comillas del label
                     if (label.startsWith('"') && label.endsWith('"')) {
                         label = label.slice(1, -1).replace(/""/g, '"');
                     }
@@ -324,7 +345,7 @@
             if (importedMoments.length > 0) {
                 if (confirm(`Encontrados ${importedMoments.length} momentos. ¿Querés reemplazar los momentos actuales de este video?`)) {
                     moments = importedMoments;
-                    moments.sort((a, b) => a.time - b.time); // Ordenar por tiempo
+                    moments.sort((a, b) => a.time - b.time);
                     saveToStorage();
                     renderMoments();
                     alert("Momentos importados y guardados correctamente.");
@@ -334,7 +355,7 @@
             }
         };
         reader.readAsText(file);
-        event.target.value = ''; // Resetear el input para poder cargar el mismo archivo de nuevo
+        event.target.value = '';
     }
 
   </script>
