@@ -83,8 +83,10 @@ Observaciones: La sustancia es un compuesto organofosforado modificado, similar 
      <label for="a1">Respuesta exacta (objeto + sustancia):</label>
      <input id="a1" placeholder="Ej.: BOTELLA CON VENENO" />
      <button onclick="check(1)">Comprobar y desbloquear Etapa 2</button>
+	 <button class="btn-give-up" onclick="giveUp(1)">Me rindo</button>
      <div id="f1" class="hint">Pista: La víctima no bebía de la copa rota. El veneno no se ingirió, se absorbió. El arma es el objeto que la víctima siempre usaba, impregnado con la sustancia que solo un experto conocería.</div>
      <div id="m1" class="hint"></div>
+
    </div>
  </section>
 
@@ -133,8 +135,10 @@ El sistema de riego para los viñedos que rodean la casona principal está progr
      <label for="a2">Respuesta exacta (hora de muerte en formato 24h):</label>
      <input id="a2" placeholder="Ej.: 22:30" />
      <button onclick="check(2)">Comprobar y desbloquear Etapa 3</button>
+	 <button class="btn-give-up" onclick="giveUp(2)">Me rindo</button>
      <div id="f2" class="hint">Pista: La tecnología no miente. Un evento automático y ruidoso interrumpió la última comunicación de la víctima. Lo que el guardia vio después era una puesta en escena.</div>
      <div id="m2" class="hint"></div>
+	 
    </div>
  </section>
 
@@ -178,8 +182,10 @@ Informe histórico sobre la parcela "La Escondida", el corazón de los viñedos 
      <label for="a3">Respuesta exacta (móvil del crimen):</label>
      <input id="a3" placeholder="Ej.: VENGANZA / DINERO / ..." />
      <button onclick="check(3)">Comprobar y desbloquear Etapa 4</button>
+	 <button class="btn-give-up" onclick="giveUp(3)">Me rindo</button>
      <div id="f3" class="hint">Pista: El móvil no es simplemente heredar la viña. Es algo más complejo relacionado con el honor familiar y lo que la "generosidad" de la víctima estaba a punto de destruir.</div>
      <div id="m3" class="hint"></div>
+	 
    </div>
  </section>
 
@@ -220,8 +226,10 @@ El interior del catavinos fue cubierto con una fina película del veneno. Se enc
      <label for="a4">Respuesta exacta (nombre y apellido del culpable):</label>
      <input id="a4" placeholder="Ej.: NOMBRE APELLIDO" />
      <button onclick="check(4)">Comprobar y ver Conclusión</button>
+	 <button class="btn-give-up" onclick="giveUp(4)">Me rindo</button>
      <div id="f4" class="hint">Pista: El asesino no es quien busca poder o dinero, sino quien intentaba proteger un legado intangible que la víctima estaba a punto de destruir con su propia versión de la verdad.</div>
      <div id="m4" class="hint"></div>
+	 
    </div>
  </section>
 
