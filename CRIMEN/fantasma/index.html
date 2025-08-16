@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Un crimen sin resolver — Juego en 4 etapas</title>
+<style>
+  :root{--bg:#0f1115;--panel:#151923;--ink:#e9ecf1;--muted:#a6adbb;--pri:#67e8f9;--acc:#c084fc;--ok:#34d399;--bad:#f87171;--warn:#fbbf24;}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:radial-gradient(1200px 600px at 15% -10%,#1d2230 0%,#0f1115 60%),linear-gradient(180deg,#0f1115,#0b0d12);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Inter,Arial}
+  header{padding:28px 18px 10px;max-width:1100px;margin:0 auto}
+  h1{font-size:clamp(26px,3.6vw,40px);line-height:1.1;margin:0;background:linear-gradient(90deg,var(--pri),var(--acc));-webkit-background-clip:text;background-clip:text;color:transparent}
+  p{color:var(--ink);opacity:.95}
+  .wrap{max-width:1100px;margin:0 auto;padding:8px 18px 60px}
+  .panel{background:linear-gradient(180deg,#151923,#111522);border:1px solid #20283a;border-radius:18px;box-shadow:0 10px 30px rgb(0 0 0 / .35);padding:18px;margin:14px 0}
+  .intro{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+  .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#0b1220;border:1px solid #1f2940;color:#b7c3e2;font-size:12px}
+  .muted{color:var(--muted)}
+  .q{margin-top:14px;padding:14px;border-radius:14px;background:linear-gradient(180deg,#121826,#0d121e);border:1px solid #25304a}
+  .q label{display:block;margin-bottom:8px;color:#d1d5db}
+  .q input{width:100%;padding:12px 14px;border-radius:12px;background:#0c1220;border:1px solid #25304a;color:#e5e7eb}
+  .q button{margin-top:10px;padding:10px 14px;border-radius:12px;border:1px solid #334155;background:linear-gradient(90deg,#1f2937,#111827);color:#e5e7eb;cursor:pointer}
+  .q button:hover{transform:translateY(-1px);box-shadow:0 10px 14px rgb(0 0 0 / .25)}
+  .btn-give-up{background:transparent;border-color: #4b5563; color: #9ca3af; margin-left: 8px;} /* Estilo para el botón de rendirse */
+  .hint{font-size:12px;color:#93c5fd;margin-top:8px}
+  .ok{color:var(--ok)}
+  .bad{color:var(--bad)}
+  .hidden{display:none}
+  .pill{padding:2px 8px;border-radius:999px;border:1px solid #374151;background:#0b0f17;color:#e5e7eb;font-size:12px}
+  .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+  .divider{height:1px;background:linear-gradient(90deg,transparent,#283248,transparent);margin:12px 0}
+  .watermark{opacity:.6;font-size:12px}
+  h2{font-size:clamp(18px,2.4vw,26px);margin:22px 0 10px;color:#dbeafe}
+  h3{margin:18px 0 8px;color:#c7d2fe}
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+  .col-8{grid-column:span 8}
+  .col-4{grid-column:span 4}
+  .col-6{grid-column:span 6}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  details{border:1px solid #25304a;border-radius:14px;padding:12px 14px;background:#101520}
+  details+details{margin-top:10px}
+  summary{cursor:pointer;font-weight:600;color:#e5e7eb}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+  .card{background:#0f1421;border:1px solid #1f2940;border-radius:16px;padding:14px}
+  .doc{white-space:pre-wrap;background:#0b111b;border:1px dashed #2a3553;border-radius:12px;padding:12px;color:#e2e8f0;line-height:1.45}
+  .stamp{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size:12px; color:#9ca3af}
+  @media (max-width:900px){.intro{grid-template-columns:1fr}.col-8,.col-4,.col-6{grid-column:span 12}}
+  @media print{body{background:#fff;color:#000}.panel{box-shadow:none;border:1px solid #999}.q{display:none}.badge,.tag{border-color:#666;color:#000}}
+</style>
+</head>
+<body>
+<header>
+  <span class="badge">Juego de misterio · Dificultad: <strong style="margin-left:6px">Alta</strong></span>
+  <h1>Un Crimen</h1>
+  <p class="muted">Imprimible y jugable offline. Lee con atención, revisa la evidencia y responde al final de cada etapa. Si aciertas la contraseña (respuesta exacta), se desbloquea la siguiente.</p>
+</header>
+<div class="wrap">
+  <div id="contenido-juego"></div>
+</div>
+<script src="respuestas.js"></script>
+<script src="etapas.js"></script>
+<script src="juego.js"></script>
+</body>
+</html>
